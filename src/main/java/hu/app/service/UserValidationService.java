@@ -1,4 +1,4 @@
-package webapp.service;
+package hu.app.service;
 
 public class UserValidationService {
 

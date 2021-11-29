@@ -14,7 +14,7 @@
     <div>Current date is <%=date%> </div>
     My First JSP<br>
     <br>
-    <form action="" method="post">
+    <form action="${pageContext.request.contextPath}/loginWithView" method="post">
         <p style="color:red">${errorMessage}</p>
         <label for="name">Enter your name:</label>        <input type="text" id="name" name="name"/>
         <label for="password">Enter your password:</label>    <input type="password" id="password" name="password"/>

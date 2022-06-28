@@ -1,0 +1,88 @@
+Maven Project vs Spring MVC:
+  https://github.com/FiglerReNi/udemy_web_app_alapok
+  Maven Project: (JavaEE)
+  	Mappaszerkezet:
+  		Src/main
+  			§ Java
+  			§ Resources
+  			§ Webapp
+  				□ WEB-INF
+  					® web.xml (kötelező file)
+  					<welcome-file> -> ha valaki a root elérést üti be erre az útvonalra fog jutni
+  					® Views
+  ez alá jöhetnek például a jsp file-ok  (html tartalom)
+  		Pom.xml
+  	Servlet:
+  		https://docs.oracle.com/javaee/6/tutorial/doc/bnafd.html
+  		HTTP Request fogadására (input) és HTTP response (output) küldésére alkalmas.
+  		HttpServlet kiterjesztése kell az osztályunknak (javax.servlet.HttpServlet)
+  		doGet()
+  		doPost()
+  	Dependency:
+  		Javax -> javaee-web-api
+  			Ez kell ahhoz hogy tudjuk használni azokat az osztályokat, amik a response-requesthez kellenek.
+  	Buildelés:
+  		A pom.xml-be kell a maven-compiler plugin, ez végzi a kód lefordítását és buildelését .jar vagy .war formátumban. Meg kell adni a java verziót is a pom.xml-ben.
+  	Futtatás:
+  		A pom.xml-be kell a tomcat7 plugin, így a maven ezt letölti automatikusan és tudjuk futtatni a programot
+  		IntelliJ futtatható mavan konfigurációnál a command line: tomcat7:run
+  	Kód:
+  		Get/Post paraméter kivétele: request.getParameter("paraméter neve")
+  		A servletből paraméter átadás jsp-nek: request.setAttribute("param neve", "param értéke")
+  		A servletből a jsp-hez irányítás a request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response) -al törénik
+  Spring MVC
+  	Mappaszerkezet:
+  		Src/main
+  			§ Java
+  			§ Resources
+  			§ Webapp
+  				□ WEB-INF
+  					® web.xml (kötelező file)
+  					<welcome-file> -> ha valaki a root elérést üti be erre az útvonalra fog jutni
+  					® Views
+  ez alá jöhetnek például a jsp file-ok  (html tartalom)
+  		Pom.xml
+  	Buildelés:
+  		A pom.xml-be kell a maven-compiler plugin, ez végzi a kód lefordítását és buildelését .jar vagy .war formátumban. Meg kell adni a java verziót is a pom.xml-ben.
+  	Futtatás:
+  		A pom.xml-be kell a tomcat7 plugin, így a maven ezt letölti automatikusan és tudjuk futtatni a programot
+  		IntelliJ futtatható mavan konfigurációnál a command line: tomcat7:run
+  	Dependency:
+  		org.springframework -> spring-webmvc
+  	Front Controller Pattern:
+  		Minden beérkező kérés egy servlethez jut először és utána ez a servlet irányítja el a kérést egy controllerhez, az útvonalra keres matchet az összes controllerben.
+  		Ez a servlet a dispatcher servlet, amit a web.xml-ben konfigurálunk, a DispatcherServlet beépített osztályt használjuk.
+  		Meg kell adnunk neki a konfigurációban egy xml file-t is, ami tartalmazza a spring context konfigurációját (beanek kezeléséhez, melyik package-t figyelje a component scan). És azt is ez a file tartalmazza, hogy hogyan keresse meg a view-at a spring, amikre a controllerek függvényeiben hivatkozunk a return után. Ehhez az InternalResourceViewResolver-t kell beanként beregisztrálnunk megfelelő beállításokkal.
+  		A servlet-mapping-el meg kell adnunk, milyen útvonalakat figyeljen és kezeljen.
+  		Példa: /* minden útvonalat ez fog kezelni, és megkeresi a controllerek között a beírt útvonalat
+  	Request kezelés:
+  		@Controller - ez teszi képessé az osztályt requestek fogadására.
+  		@RequestMapping(value=" ", method=" ") - útvonal megadása.
+  		Ha egy osztály a @Controller annotációval van ellátva akkor a benne lévő függvények a  return utáni stringre egy útvonalat keresnek (általában egy viewhoz fog vezetni). Ez az alapbeállítása spring esetében.
+  		Ha konkrétan egy stringet akarunk visszaadni, akkor a függvény fölé kell a @ResponseBody annotáció.
+  	Adatáramlás:
+  		1. Beérkező request: Front Controller kezeli
+  		2. Front Controller továbbítja a megfelelő Controllerhez
+  		3. A Controller visszaad egy választ a Front Controllernek, ha kell elmegy a modell réteghez adatért
+  		4. A Front Controller megkeresi - a ViewResolver beállításait is használva - a megfelelő Viewt és átad neki a Controllerttől jövő adatokat
+  		5. A View visszaadja a html-t a Front Controllernek
+  		6. A Front Controller visszaadja a megfelelő responset
+  	Logolás:
+  		Log4j-t használjuk
+  		Kell hozzá dependency: log4j -> log4j
+  		Kell hozzá .properties beállítás:
+  			log4j.rootLogger=TRACE,Appender1
+  			log4j.appender.Appender1=org.apache.log4j.ConsoleAppender
+  			log4j.appender.Appender1.layout=org.apache.log4j.PatternLayout
+  			log4j.appender.Appender1.layout.ConversionPattern=%-7p%d[%t]%c%x-%m%n
+  		Öt logolási szintje van, amit beállítunk azt a szintet és az alatta levőket is látjuk. Pl. info esetén ír minden infot warnt és errort.
+  			Trace - minden
+  			Debug - sok info
+  			Info - kevesebb info
+  			Warn - figyelmeztetések
+  			Error - hibák
+  	Kód:
+  		Paramére kivétele: @RequestParam
+  		Paraméter átadása a viewnak: ModelMap osztállyal .put(<változó_neve>, <változó_értéke>) függvénnyel
+
+
